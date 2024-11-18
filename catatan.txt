@@ -1,0 +1,2 @@
+npm i prisma @prisma/client jsonwebtoken bcryptjs nodemailer dotenv @sentry/node @sentry/profiling-node
+npx prisma init

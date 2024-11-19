@@ -1,36 +1,45 @@
 <%- include("partials/header", {title: title}) %>
 
-<div class="container">
-    <h2>Register</h2>
+<div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-xl font-semibold mb-4">Register</h2>
     <% if (error) { %>
-    <div class="alert alert-danger"><%= error %></div>
+    <div class="bg-red-500 text-white p-2 rounded mb-4"><%= error %></div>
     <% } %>
 
     <form action="/auth/register" method="post">
-        <table>
-            <tr>
-                <td><label for="email">Email</label></td>
-                <td>:</td>
-                <td><input type="email" name="email" id="email" required /></td>
-            </tr>
-            <tr>
-                <td><label for="password">Password</label></td>
-                <td>:</td>
-                <td>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        required
-                    />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3"><button type="submit">Register</button></td>
-            </tr>
-        </table>
+        <div class="mb-4">
+            <label for="email" class="block mb-1">Email</label>
+            <input
+                type="email"
+                name="email"
+                id="email"
+                required
+                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600"
+            />
+        </div>
+        <div class="mb-4">
+            <label for="password" class="block mb-1">Password</label>
+            <input
+                type="password"
+                name="password"
+                id="password"
+                required
+                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600"
+            />
+        </div>
+        <div class="mb-4">
+            <button
+                type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded"
+            >
+                Register
+            </button>
+        </div>
     </form>
-    <a href="/auth/login" class="btn btn-secondary"
+    <a href="/auth/forgot-password" class="text-white-400 hover:underline"
+        >Forgot Password</a
+    ><br />
+    <a href="/auth/login" class="text-blue-400 hover:underline"
         >Already have an account? Login</a
     >
 </div>

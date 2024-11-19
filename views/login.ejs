@@ -1,45 +1,49 @@
-<%- include("partials/header", {title: title}) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title || "App" %></title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex flex-col h-screen">
+    <header class="p-4 bg-gray-800">
+        <h1 class="text-2xl font-bold">Kriss</h1>
+    </header>
+    <main class="flex-grow flex justify-center items-center">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+            <h2 class="text-xl font-semibold mb-4">Sign in</h2>
+            <% if (error) { %>
+            <div class="bg-red-500 text-white p-2 rounded mb-4"><%= error %></div>
+            <% } %>
 
-<div class="container">
-    <h2>Sign in</h2>
-    <% if (error) { %>
-    <div class="alert alert-danger"><%= error %></div>
-    <% } %>
+            <form action="/auth/login" method="post">
+                <div class="mb-4">
+                    <label for="email" class="block mb-1">Email</label>
+                    <input type="email" name="email" id="email" required class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600" />
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block mb-1">Password</label>
+                    <input type="password" name="password" id="password" required class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600" />
+                </div>
+                <div class="mb-4">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded">Sign in</button>
+                </div>
+            </form>
+            <a href="/auth/forgot-password" class="text-white-400 hover:underline">Forgot Password</a><br>
+            <a href="/auth/register" class="text-blue-400 hover:underline">Don't have an account? Register</a>
+        </div>
+    </main>
+    <footer class="p-4 bg-gray-800 text-center">
+        <p>&copy; 2024 My App By Kriss. All rights reserved.</p>
+    </footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
 
-    <form action="/auth/login" method="post">
-        <table>
-            <tr>
-                <td><label for="email">Email</label></td>
-                <td>:</td>
-                <td><input type="email" name="email" id="email" required /></td>
-            </tr>
-            <tr>
-                <td><label for="password">Password</label></td>
-                <td>:</td>
-                <td>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        required
-                    />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3"><button type="submit">Sign in</button></td>
-            </tr>
-        </table>
-    </form>
-    <a href="/auth/register" class="btn btn-secondary"
-        >Unready have an account? Register</a
-    >
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io();
-
-    socket.on("loginError", (msg) => {
-        alert(msg);
-    });
-</script>
-<%- include('partials/footer') %>
+        socket.on("loginError", (msg) => {
+            alert(msg);
+        });
+    </script>
+</body>
+</html>

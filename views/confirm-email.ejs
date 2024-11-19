@@ -1,14 +1,14 @@
 <%- include("partials/header", {title: title}) %>
 
-<div class="container">
-    <h1>Konfirmasi Email</h1>
+<div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96 text-center">
+    <h1 class="text-xl font-semibold mb-4">Konfirmasi Email</h1>
     <% if (error) { %>
-        <div class="alert alert-danger"><%= error %></div>
+        <div class="bg-red-500 text-white p-2 rounded mb-4"><%= error %></div>
     <% } %>
     <% if (message) { %>
-        <div class="alert alert-success"><%= message %></div>
+        <div class="bg-green-500 text-white p-2 rounded mb-4"><%= message %></div>
     <% } %>
-    <a href="/auth/login" class="btn btn-primary">Login</a>
+    <a href="/auth/login" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white p-2 rounded">Login</a>
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>

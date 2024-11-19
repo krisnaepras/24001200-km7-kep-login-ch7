@@ -1,5 +1,15 @@
-<%- include("partials/header") %>
+<%- include("partials/header", {title: title}) %>
 
+<h1>Welcome to the Dashboard</h1>
+<a href="/auth/logout" class="btn btn-danger">Logout</a>
 
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    socket.on("userLoggedOut", (msg) => {
+        alert(msg);
+    });
+</script>
 
 <%- include('partials/footer') %>

@@ -38,9 +38,6 @@
 <script>
     const socket = io();
 
-    socket.on("connectt", () => {
-        console.log("Socket connected!");
-    });
     socket.on("welcomeNotification", (msg) => {
         alert(msg);
     });

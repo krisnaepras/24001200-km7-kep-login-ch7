@@ -1,21 +1,45 @@
-<%- include("partials/header") %>
+<%- include("partials/header", {title: title}) %>
 
-<h2>Sign in</h2>
+<div class="container">
+    <h2>Sign in</h2>
+    <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+    <% } %>
 
-<form action="/auth/login">
-    <table>
-        <tr>
-            <td><label for="email">Email:</label></td>
-            <td><input type="email" name="email" id="email" required /></td>
-        </tr>
-        <tr>
-            <td><label for="password">Password:</label></td>
-            <td><input type="password" name="password" id="password" /></td>
-        </tr>
-        <tr>
-            <td colspan="2"><button type="submit">Sign in</button></td>
-        </tr>
-    </table>
-</form>
+    <form action="/auth/login" method="post">
+        <table>
+            <tr>
+                <td><label for="email">Email</label></td>
+                <td>:</td>
+                <td><input type="email" name="email" id="email" required /></td>
+            </tr>
+            <tr>
+                <td><label for="password">Password</label></td>
+                <td>:</td>
+                <td>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        required
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><button type="submit">Sign in</button></td>
+            </tr>
+        </table>
+    </form>
+    <a href="/auth/register" class="btn btn-secondary"
+        >Unready have an account? Register</a
+    >
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
 
+    socket.on("loginError", (msg) => {
+        alert(msg);
+    });
+</script>
 <%- include('partials/footer') %>

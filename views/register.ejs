@@ -1,21 +1,52 @@
-<%- include("partials/header") %>
+<%- include("partials/header", {title: title}) %>
 
-<h2>Register</h2>
+<div class="container">
+    <h2>Register</h2>
+    <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+    <% } %>
 
-<form action="/auth/register">
-    <table>
-        <tr>
-            <td><label for="email">Email:</label></td>
-            <td><input type="email" name="email" id="email" required /></td>
-        </tr>
-        <tr>
-            <td><label for="password">Password:</label></td>
-            <td><input type="password" name="password" id="password" /></td>
-        </tr>
-        <tr>
-            <td colspan="2"><button type="submit">Register</button></td>
-        </tr>
-    </table>
-</form>
+    <form action="/auth/register" method="post">
+        <table>
+            <tr>
+                <td><label for="email">Email</label></td>
+                <td>:</td>
+                <td><input type="email" name="email" id="email" required /></td>
+            </tr>
+            <tr>
+                <td><label for="password">Password</label></td>
+                <td>:</td>
+                <td>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        required
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><button type="submit">Register</button></td>
+            </tr>
+        </table>
+    </form>
+    <a href="/auth/login" class="btn btn-secondary"
+        >Already have an account? Login</a
+    >
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
 
+    socket.on("connectt", () => {
+        console.log("Socket connected!");
+    });
+    socket.on("welcomeNotification", (msg) => {
+        alert(msg);
+    });
+
+    socket.on("registrationError", (msg) => {
+        alert(msg);
+    });
+</script>
 <%- include('partials/footer') %>

@@ -1,0 +1,22 @@
+<%- include("partials/header") %>
+
+<div class="container">
+    <h1>Konfirmasi Email</h1>
+    <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <% if (message) { %>
+        <div class="alert alert-success"><%= message %></div>
+    <% } %>
+    <a href="/auth/login" class="btn btn-primary">Login</a>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    
+    socket.on('emailConfirmed', function(msg) {
+        alert(msg); 
+    });
+</script>
+
+<%- include('partials/footer') %>

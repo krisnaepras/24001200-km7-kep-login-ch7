@@ -3,11 +3,12 @@ const prisma = require("../models/prismaClients");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sendEmail } = require("../utils/mailer");
+// const { Server } = require("socket.io");
+// const io = new Server();
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
 
 class AuthController {
-
     static async registerPage(req, res) {
         res.render("register", {
             title: "Register",
@@ -19,18 +20,16 @@ class AuthController {
         try {
             const { email, password } = req.body;
 
-            if (!email || !password) {
-                return res
-                    .status(400)
-                    .json({ error: "Email dan Password harus diisi" });
-            }
-
             const existingUser = await prisma.user.findUnique({
                 where: { email },
             });
 
             if (existingUser) {
-                return res.status(400).json({ error: "Email telah terdaftar" });
+                io.emit("registrationError", "Email sudah terdaftar");
+                return res.render("register", {
+                    title: "Register",
+                    error: "Email telah terdaftar",
+                });
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,21 +40,92 @@ class AuthController {
                 },
             });
 
-            const token = jwt.sign({email}, JWT_SECRET, {expiresIn: '1h'})
-            const confirmationLink = `${req.protocol}://${req.get("host")}/auth/confirm-email${token}`
+            io.emit('connectt')
+            io.emit(
+                "welcomeNotification",
+                `Welcome, ${email}! Akun anda telah berhasil dibuat.`
+            );
 
-            await sendEmail(email, "Email Confirmation", `Click here: ${confirmationLink}`)
+            const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
+            const confirmationLink = `http://${req.get(
+                "host"
+            )}/auth/confirm-email${token}`;
 
-            res.redirect();
+            await sendEmail(
+                email,
+                "Email Confirmation",
+                `Click here: ${confirmationLink}`
+            );
+
+                res.redirect("/auth/login");
         } catch (error) {
             console.log(error);
+            io.emit("registrationError", "Terjadi kesalahan pada server.");
             res.status(500).json({
                 message: "Terjadi kesalahan pada server.",
             });
         }
     }
 
+    static async confirmEmail(req, res) {
+        try {
+            const { token } = req.params;
+            if (!token) {
+                return res.render("confitm-email", {
+                    title: "Confirm Email",
+                    error: "Invalid token",
+                });
+            }
 
+            const decoded = jwt.verify(token, JWT_SECRET);
+            if (!decoded) {
+                return res.render("confitm-email", {
+                    title: "Confirm Email",
+                    error: "Invalid token",
+                });
+            }
+
+            const user = await prisma.user.findUnique({
+                where: { email: decoded.email },
+            });
+
+            if (!user) {
+                return res.render("confitm-email", {
+                    title: "Confirm Email",
+                    error: "User not found",
+                });
+            }
+
+            await prisma.user.update({
+                where: { email: decoded.email },
+                data: { confirmed: true },
+            });
+
+            io.emit(
+                "emailConfirmed",
+                `Email ${decoded.email} telah berhasil dikonfirmasi`
+            );
+
+            res.render("confirm-email", {
+                title: "Confirm Email",
+                error: null,
+                message: "Email telah berhasil dikonfirmasi. Silahkan login.",
+            });
+        } catch (error) {
+            console.log(error);
+            return res.render("confirm-email", {
+                title: "Confirm Email",
+                error: "Internal server error",
+            });
+        }
+    }
+
+    static async loginPage(req, res) {
+        res.render("login", {
+            title: "Sign in",
+            error: null,
+        });
+    }
 
     static async login(req, res) {
         try {
